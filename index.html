@@ -438,7 +438,9 @@ function scanLoop(){
         requestAnimationFrame(()=>{
           const card=document.querySelector('.card[data-id="'+clean+'"]');
           if(card){
-            window.scrollTo({top:card.offsetTop-130,behavior:'smooth'});
+            // Scroll card to center of viewport
+            const top=card.getBoundingClientRect().top+window.pageYOffset-120;
+            window.scrollTo({top,behavior:'smooth'});
             card.style.outline='3px solid #1565c0';
             card.style.background='#e3f2fd';
             setTimeout(()=>{card.style.outline='';card.style.background='';},4000);
