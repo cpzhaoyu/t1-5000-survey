@@ -53,13 +53,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 24px;border-radius:8px;font-size:15px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;}
 .toast.s{opacity:1;}
 .hint{text-align:center;padding:20px;color:#888;font-size:15px;}
-.jump{display:flex;gap:3px;align-items:center;font-size:11px;}
-.jump input{width:38px;padding:3px;border:1px solid #ddd;border-radius:4px;text-align:center;font-size:12px;}
-.qdates{display:flex;gap:3px;margin:4px 0;flex-wrap:nowrap;overflow:hidden;}
-.qbtn{flex:1;min-width:0;padding:14px 1px;border:2px solid #ddd;border-radius:6px;background:#f5f5f0;font-size:17px;cursor:pointer;text-align:center;white-space:nowrap;line-height:1.3;overflow:hidden;text-overflow:ellipsis;}
+.jump{display:flex;gap:3px;align-items:center;font-size:13px;}
+.jump input{width:36px;padding:4px 2px;border:1px solid #ddd;border-radius:4px;text-align:center;font-size:15px;}
+.qdates{display:flex;gap:2px;margin:3px 0;flex-wrap:nowrap;}
+.qbtn{flex:1;min-width:0;padding:12px 0;border:2px solid #ddd;border-radius:6px;background:#f5f5f0;font-size:14px;cursor:pointer;text-align:center;white-space:nowrap;line-height:1.2;overflow:hidden;}
 .qbtn:active{background:#dcedc8;}
 .qbtn.sel{border-color:#4caf50;background:#e8f5e9;font-weight:700;color:#2e7d32;}
-.qlabel{font-size:18px;color:#888;margin-top:12px;}
+.qlabel{font-size:16px;color:#888;margin-top:8px;}
 
 /* Camera scan overlay */
 .scan-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:300;display:flex;flex-direction:column;}
@@ -82,7 +82,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div class="ctrls">
   <input type="text" id="q" placeholder="搜索编号或扫码后粘贴..." oninput="render()" onkeydown="if(event.key==='Enter')searchJump()">
   <input type="file" id="camIn" accept="image/*" capture="environment" style="display:none" onchange="scanCam()">
-  <button class="btn s" onclick="startLiveScan()" title="在线扫码" style="font-size:24px;padding:6px 14px;">📷</button>
+  <button class="btn s" onclick="startLiveScan()" title="在线扫码" style="font-size:20px;padding:6px 10px;">📷</button>
   <span class="ftag on" data-f="all" onclick="setF('all',this)">全部</span>
   <span class="ftag wo" data-f="no" onclick="setF('no',this)">未调查</span>
   <span class="ftag" data-f="ok" onclick="setF('ok',this)">已完成</span>
@@ -91,7 +91,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     列<input id="jC" type="number" min="101" max="199" value="101">
     <button class="btn s" onclick="jump()">跳</button>
   </div>
-  <button class="btn s" onclick="cloudPull();toast('🔄 刷新中...')">🔄</button>
+  <button class="btn s" onclick="cloudPull();toast('刷新中...')" style="font-size:16px;padding:8px 12px;">刷新</button>
   <button class="btn g s" onclick="exportCSV()">导出</button>
 </div>
 </div>
