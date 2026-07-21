@@ -190,7 +190,7 @@ async function cloudPull(){
   }catch(e){}
 }
 
-pollTimer=setInterval(cloudPull,3000);
+pollTimer=setInterval(cloudPull,8000);
 cloudPull();
 
 function copyLink(){
@@ -290,6 +290,9 @@ let FL='all', SEL=null, skipAuto=false;
 
 // Render
 function render(){
+  requestAnimationFrame(()=>_render());
+}
+function _render(){
   const q=document.getElementById('q').value.trim().toLowerCase();
   let rows=D.slice();
   if(FL==='no') rows=rows.filter(d=>!done(d));
@@ -470,9 +473,19 @@ function setDate(field,n,uid){
   const d=dayOffset(n);
   if(!ED[uid])ED[uid]={};
   ED[uid][field]=d;
-  save();cloudPush();render();
+  save();cloudPush();
   document.querySelectorAll('.qbtn[data-f='+field+']').forEach(b=>b.classList.remove('sel'));
   document.querySelector('.qbtn[data-f='+field+'][data-n=\"'+n+'\"]')?.classList.add('sel');
+  // Quick update: just refresh the card's dot color + stats, don't re-render all cards
+  const card=document.querySelector('.card[data-id=\"'+uid+'\"]');
+  if(card){
+    const dot=card.querySelector('.dot');
+    if(dot){
+      const ok=done({id:uid}), sf=hs({id:uid}), ts=ht({id:uid});
+      dot.style.background=ok?'#66bb6a':(sf||ts?'#ffd54f':'#ef5350');
+    }
+  }
+  renderStats();
   toast('✅ '+{sf:'散粉',ts:'吐丝'}[field]+'='+dateLabel(n).split('<br>')[1]);
 }
 
