@@ -17,16 +17,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .v.g{color:#2e7d32;}.v.o{color:#e65100;}.v.b{color:#1565c0;}
 .bar-wrap{height:4px;background:#e0e0e0;border-radius:2px;margin-top:6px;}
 .bar{height:100%;background:#2e7d32;border-radius:2px;transition:width .3s;}
-.ctrls{padding:6px 10px;background:#fff;border-bottom:1px solid #e0e0d8;}
-.ctrls .row{display:flex;gap:4px;align-items:center;margin:3px 0;}
-.ctrls input{flex:1;min-width:120px;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:16px;}
-.ctrls select{padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:16px;background:#fff;}
-.btn{padding:8px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;font-size:15px;cursor:pointer;white-space:nowrap;}
+.ctrls{padding:5px 8px;background:#fff;border-bottom:1px solid #e0e0d8;}
+.ctrls .row{display:flex;gap:4px;align-items:center;margin:2px 0;height:36px;}
+.ctrls input{flex:1;min-width:80px;padding:7px 8px;border:1px solid #ddd;border-radius:5px;font-size:15px;}
+.ctrls select{padding:7px 8px;border:1px solid #ddd;border-radius:5px;font-size:15px;background:#fff;}
+.btn{padding:7px 14px;border:1px solid #ddd;border-radius:5px;background:#fff;font-size:15px;cursor:pointer;white-space:nowrap;}
 .btn:active{background:#eee;}
 .btn.g{background:#2e7d32;color:#fff;border-color:#2e7d32;}
 .btn.r{background:#c62828;color:#fff;border-color:#c62828;}
-.btn.s{padding:6px 12px;font-size:14px;}
-.ftag{padding:5px 12px;border-radius:14px;font-size:14px;border:1px solid #ddd;background:#fff;cursor:pointer;}
+.btn.s{padding:6px 10px;font-size:14px;}
+.ftag{padding:5px 10px;border-radius:13px;font-size:14px;border:1px solid #ddd;background:#fff;cursor:pointer;}
 .ftag.on{background:#2e7d32;color:#fff;border-color:#2e7d32;}
 .ftag.wo.on{background:#e65100;border-color:#e65100;}
 
@@ -89,14 +89,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <span class="ftag wo" data-f="no" onclick="setF('no',this)">未调查</span>
     <span class="ftag" data-f="ok" onclick="setF('ok',this)">已完成</span>
   </div>
-  <div class="row">
-    <div class="jump">
+  <div class="row" style="justify-content:space-between;">
+    <div class="jump" style="flex:1;">
       排<input id="jR" type="number" min="6" max="45" value="6">
       列<input id="jC" type="number" min="101" max="199" value="101">
       <button class="btn s" onclick="jump()" style="min-width:30px;padding:4px 6px;font-size:14px;">跳</button>
     </div>
-    <button class="btn s" onclick="cloudPull();toast('刷新中...')" style="font-size:15px;">刷新</button>
-    <button class="btn g s" onclick="exportCSV()">导出</button>
+    <button class="btn s" onclick="cloudPull();toast('刷新中...')" style="flex:1;font-size:15px;text-align:center;">刷新</button>
+    <button class="btn g s" onclick="exportCSV()" style="flex:1;text-align:center;">导出</button>
   </div>
 </div>
 </div>
