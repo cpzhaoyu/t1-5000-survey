@@ -439,7 +439,7 @@ function scanLoop(){
           const card=document.querySelector('.card[data-id="'+clean+'"]');
           if(card){
             // Scroll card to center of viewport
-            const top=card.getBoundingClientRect().top+window.pageYOffset-120;
+            const top=card.getBoundingClientRect().top+window.pageYOffset-200;
             window.scrollTo({top,behavior:'smooth'});
             card.style.outline='3px solid #1565c0';
             card.style.background='#e3f2fd';
