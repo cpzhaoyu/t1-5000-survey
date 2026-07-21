@@ -17,7 +17,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .v.g{color:#2e7d32;}.v.o{color:#e65100;}.v.b{color:#1565c0;}
 .bar-wrap{height:4px;background:#e0e0e0;border-radius:2px;margin-top:6px;}
 .bar{height:100%;background:#2e7d32;border-radius:2px;transition:width .3s;}
-.ctrls{display:flex;gap:4px;padding:6px 10px;background:#fff;border-bottom:1px solid #e0e0d8;flex-wrap:nowrap;align-items:center;overflow-x:auto;}
+.ctrls{padding:6px 10px;background:#fff;border-bottom:1px solid #e0e0d8;}
+.ctrls .row{display:flex;gap:4px;align-items:center;margin:3px 0;}
 .ctrls input{flex:1;min-width:120px;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:16px;}
 .ctrls select{padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:16px;background:#fff;}
 .btn{padding:8px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;font-size:15px;cursor:pointer;white-space:nowrap;}
@@ -80,19 +81,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 </div>
 
 <div class="ctrls">
-  <input type="text" id="q" placeholder="搜..." oninput="render()" onkeydown="if(event.key==='Enter')searchJump()" style="flex:1;min-width:60px;max-width:120px;">
-  <input type="file" id="camIn" accept="image/*" capture="environment" style="display:none" onchange="scanCam()">
-  <button class="btn s" onclick="startLiveScan()" title="在线扫码" style="font-size:20px;padding:6px 10px;">📷</button>
-  <span class="ftag on" data-f="all" onclick="setF('all',this)">全部</span>
-  <span class="ftag wo" data-f="no" onclick="setF('no',this)">未调查</span>
-  <span class="ftag" data-f="ok" onclick="setF('ok',this)">已完成</span>
-  <div class="jump">
-    排<input id="jR" type="number" min="6" max="45" value="6">
-    列<input id="jC" type="number" min="101" max="199" value="101">
-    <button class="btn s" onclick="jump()">跳</button>
+  <div class="row">
+    <input type="text" id="q" placeholder="搜..." oninput="render()" onkeydown="if(event.key==='Enter')searchJump()" style="flex:1;min-width:0;">
+    <input type="file" id="camIn" accept="image/*" capture="environment" style="display:none" onchange="scanCam()">
+    <button class="btn s" onclick="startLiveScan()" title="扫码" style="font-size:20px;padding:4px 10px;">📷</button>
+    <span class="ftag on" data-f="all" onclick="setF('all',this)">全部</span>
+    <span class="ftag wo" data-f="no" onclick="setF('no',this)">未调查</span>
+    <span class="ftag" data-f="ok" onclick="setF('ok',this)">已完成</span>
   </div>
-  <button class="btn s" onclick="cloudPull();toast('刷新中...')" style="font-size:16px;padding:8px 12px;">刷新</button>
-  <button class="btn g s" onclick="exportCSV()">导出</button>
+  <div class="row">
+    <div class="jump">
+      排<input id="jR" type="number" min="6" max="45" value="6">
+      列<input id="jC" type="number" min="101" max="199" value="101">
+      <button class="btn s" onclick="jump()">跳</button>
+    </div>
+    <button class="btn s" onclick="cloudPull();toast('刷新中...')" style="font-size:15px;">刷新</button>
+    <button class="btn g s" onclick="exportCSV()">导出</button>
+  </div>
 </div>
 </div>
 
