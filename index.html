@@ -64,7 +64,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 /* Camera scan overlay */
 .scan-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:300;display:flex;flex-direction:column;}
-.scan-overlay video{flex:1;width:100%;object-fit:cover;transform:scaleX(-1);}
+.scan-overlay video{flex:1;width:100%;object-fit:cover;}
 .scan-overlay .scan-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:220px;height:220px;border:3px solid #66bb6a;border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,0.5);}
 .scan-overlay .scan-close{position:absolute;top:16px;right:16px;z-index:1;background:rgba(0,0,0,0.6);color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:14px;cursor:pointer;}
 .scan-overlay .scan-hint{position:absolute;bottom:40px;left:0;right:0;text-align:center;color:#fff;font-size:14px;z-index:1;}
@@ -410,10 +410,19 @@ function scanLoop(){
   if(!scanStream)return;
   const video=document.getElementById('scanVideo');
   if(video.readyState<2){scanTimer=requestAnimationFrame(scanLoop);return;}
+  scanCtx.setTransform(1,0,0,1,0,0);
   scanCtx.drawImage(video,0,0,640,480);
   const data=scanCtx.getImageData(0,0,640,480);
   if(typeof jsQR!=='undefined'){
-    const code=jsQR(data.data,640,480);
+    let code=jsQR(data.data,640,480);
+    // If not found, try flipped (mirrored camera)
+    if(!code){
+      scanCtx.setTransform(-1,0,0,1,640,0);
+      scanCtx.drawImage(video,0,0,640,480);
+      const flipData=scanCtx.getImageData(0,0,640,480);
+      code=jsQR(flipData.data,640,480);
+      scanCtx.setTransform(1,0,0,1,0,0);
+    }
     if(code){
       const uid=code.data.trim();
       const m=uid.match(/[?&](?:id|uid)=([^&]+)/i);
