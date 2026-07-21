@@ -459,9 +459,11 @@ function setDate(field,n,uid){
   document.querySelector('.qbtn[data-f='+field+'][data-n=\"'+n+'\"]')?.classList.add('sel');
   const both=ED[uid].sf&&ED[uid].sf.trim()&&ED[uid].ts&&ED[uid].ts.trim();
   if(both){
-    closeM();setTimeout(()=>nav(1),200);
+    // Show confirm instead of auto-advancing
+    const bar=document.getElementById('confirmRow');
+    if(bar)bar.style.display='flex';
   }else{
-    toast('✅ '+{sf:'散粉',ts:'吐丝'}[field]+'='+dateLabel(n).split('<br>')[1]);
+    toast('✅ '+{sf:'散粉',ts:'吐丝'}[field]+'='+dateLabel(n).split(' ')[1]);
   }
 }
 
@@ -482,6 +484,10 @@ function editModal(d){
     <div class="qdates">${dateBtn(d.id,'sf',-2)}${dateBtn(d.id,'sf',-1)}${dateBtn(d.id,'sf',0)}${dateBtn(d.id,'sf',1)}${dateBtn(d.id,'sf',2)}</div>
     <div class="qlabel">🌽 吐丝期 ${ts?'<b>'+fmt(ts)+'</b>':'未填'}</div>
     <div class="qdates">${dateBtn(d.id,'ts',-2)}${dateBtn(d.id,'ts',-1)}${dateBtn(d.id,'ts',0)}${dateBtn(d.id,'ts',1)}${dateBtn(d.id,'ts',2)}</div>
+    <div id="confirmRow" style="display:${done(d)?'flex':'none'};align-items:center;gap:8px;margin-top:10px;padding:10px;background:#e8f5e9;border-radius:8px;">
+      <span style="flex:1;font-size:16px;color:#2e7d32;">🌾${fmt(gs(d))} 🌽${fmt(gt(d))}</span>
+      <button class="btn g" onclick="closeM();setTimeout(()=>nav(1),100)" style="flex:1;font-size:18px;">✅ 确认，下一个</button>
+    </div>
     <div class="btns">
       <button class="btn r" onclick="delOne('${d.id}')">🗑 清除</button>
       <button class="btn" onclick="nav(-1)">◀ 上</button>
