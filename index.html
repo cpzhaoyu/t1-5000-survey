@@ -489,10 +489,14 @@ function editModal(d){
   document.getElementById('mdCt').innerHTML=`
     <h3>${done(d)?'✅':'⚠️'} ${d.id}</h3>
     <div class="row"><span class="k">位置</span><span class="v">排${d.r} 列${d.c}</span></div>
+    <div style="background:${sf?'#e8f5e9':'#fff8e1'};border-radius:8px;padding:6px 8px;margin-top:6px;">
     <div class="qlabel">🌾 散粉期 ${sf?'<b>'+fmt(sf)+'</b>':'未填'}</div>
     <div class="qdates">${dateBtn(d.id,'sf',-2)}${dateBtn(d.id,'sf',-1)}${dateBtn(d.id,'sf',0)}${dateBtn(d.id,'sf',1)}${dateBtn(d.id,'sf',2)}</div>
+    </div>
+    <div style="background:${ts?'#e8f5e9':'#fff8e1'};border-radius:8px;padding:6px 8px;margin-top:6px;">
     <div class="qlabel">🌽 吐丝期 ${ts?'<b>'+fmt(ts)+'</b>':'未填'}</div>
     <div class="qdates">${dateBtn(d.id,'ts',-2)}${dateBtn(d.id,'ts',-1)}${dateBtn(d.id,'ts',0)}${dateBtn(d.id,'ts',1)}${dateBtn(d.id,'ts',2)}</div>
+    </div>
     <div class="btns">
       <button class="btn r" onclick="delOne('${d.id}')">🗑 清除</button>
       <button class="btn" onclick="nav(-1)">◀ 上</button>
