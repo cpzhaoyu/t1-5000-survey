@@ -59,7 +59,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .qdates{display:flex;gap:2px;margin:3px 0;flex-wrap:nowrap;}
 .qbtn{flex:1;min-width:0;padding:8px 1px;border:2px solid #ccc;border-radius:6px;background:#e8e4d8;font-size:18px;cursor:pointer;text-align:center;white-space:pre-line;line-height:1.25;font-weight:500;}
 .qbtn:active{background:#c8e6c9;}
+.qbtn.done{background:#e0e0e0;border-color:#d0d0d0;color:#aaa;font-weight:400;}
 .qbtn.sel{border-color:#2e7d32;background:#81c784;font-weight:800;color:#555;box-shadow:0 0 4px rgba(46,125,50,0.4);}
+.qbtn.sel.done{border-color:#999;background:#c8e6c9;color:#777;box-shadow:none;}
 .qlabel{font-size:16px;color:#888;margin-top:8px;}
 
 /* Camera scan overlay */
@@ -468,7 +470,7 @@ function stopLiveScan(){
 function today(){return new Date().toISOString().slice(0,10);}
 function dayOffset(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
 function dateLabel(n){const d=dayOffset(n);const m=d.slice(5,7).replace(/^0/,'');const day=d.slice(8,10).replace(/^0/,'');const labels={'-2':'前天','-1':'昨天','0':'今天','1':'明天','2':'后天'};return labels[''+n]+'<br>'+m+'/'+day;}
-function dateBtn(uid,field,n){return '<button class=qbtn data-f='+field+' data-n='+n+' onclick=setDate(\"'+field+'\",'+n+',\"'+uid+'\")>'+dateLabel(n)+'</button>';}
+function dateBtn(uid,field,n,hasVal){const cls=hasVal?'qbtn done':'qbtn';return '<button class='+cls+' data-f='+field+' data-n='+n+' onclick=setDate(\"'+field+'\",'+n+',\"'+uid+'\")>'+dateLabel(n)+'</button>';}
 function setDate(field,n,uid){
   const d=dayOffset(n);
   if(!ED[uid])ED[uid]={};
@@ -504,11 +506,11 @@ function editModal(d){
     <div class="row"><span class="k">位置</span><span class="v">排${d.r} 列${d.c}</span></div>
     <div style="background:${sf?'#e8f5e9':'#fff8e1'};border-radius:8px;padding:6px 8px;margin-top:6px;">
     <div class="qlabel">🌾 散粉期 ${sf?'<b>'+fmt(sf)+'</b>':'未填'}</div>
-    <div class="qdates">${dateBtn(d.id,'sf',-2)}${dateBtn(d.id,'sf',-1)}${dateBtn(d.id,'sf',0)}${dateBtn(d.id,'sf',1)}${dateBtn(d.id,'sf',2)}</div>
+    <div class="qdates">${dateBtn(d.id,'sf',-2,sf)}${dateBtn(d.id,'sf',-1,sf)}${dateBtn(d.id,'sf',0,sf)}${dateBtn(d.id,'sf',1,sf)}${dateBtn(d.id,'sf',2,sf)}</div>
     </div>
     <div style="background:${ts?'#e8f5e9':'#fff8e1'};border-radius:8px;padding:6px 8px;margin-top:6px;">
     <div class="qlabel">🌽 吐丝期 ${ts?'<b>'+fmt(ts)+'</b>':'未填'}</div>
-    <div class="qdates">${dateBtn(d.id,'ts',-2)}${dateBtn(d.id,'ts',-1)}${dateBtn(d.id,'ts',0)}${dateBtn(d.id,'ts',1)}${dateBtn(d.id,'ts',2)}</div>
+    <div class="qdates">${dateBtn(d.id,'ts',-2,ts)}${dateBtn(d.id,'ts',-1,ts)}${dateBtn(d.id,'ts',0,ts)}${dateBtn(d.id,'ts',1,ts)}${dateBtn(d.id,'ts',2,ts)}</div>
     </div>
     <div class="btns">
       <button class="btn r" onclick="delOne('${d.id}')">🗑 清除</button>
