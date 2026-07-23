@@ -156,20 +156,31 @@ for(let r=G.rs;r<=G.re;r++)GR[r]={};
 D.forEach((d,i)=>{if(!GR[d.r])GR[d.r]={};GR[d.r][d.c]=i;});
 
 // Edits
-const ED=JSON.parse(localStorage.getItem('t1_v3')||'{}');
+const ED=JSON.parse(localStorage.getItem('t1_v4')||'{}');
 
 // Scrapped plots: embedded in page, no link update needed
 const SCRAPPED=['26XXY08051','26XXY08251'];
 SCRAPPED.forEach(id=>{if(!ED[id])ED[id]={};ED[id].sf='报废';ED[id].ts='报废';ED[id].scrapped=true;});
 
 // Auto-sync: dual channel - write to cloud, read from relay
-const CLOUD='https://jsonblob.com/api/jsonBlob/019f82d1-df9f-7c3c-bb69-80b56e5f900b';
+const CLOUD='https://jsonblob.com/api/jsonBlob/019f8d71-7234-76e9-b7ea-a9a5e030a21c';
 let syncVer=0, pollTimer=null;
 
-function save(){localStorage.setItem('t1_v3',JSON.stringify(ED));}
+function save(){localStorage.setItem('t1_v4',JSON.stringify(ED));}
 
 async function cloudPush(){
   try{
+    // Read remote first to avoid overwriting newer data
+    const check=await fetch(CLOUD);
+    if(check.ok){
+      const remote=await check.json();
+      const remoteVer=remote.ver||0;
+      const remoteCount=remote.data?Object.keys(remote.data).length:0;
+      const localCount=Object.values(ED).filter(v=>v.sf||v.ts).length;
+      // Don't push if remote has more data and we're behind
+      if(remoteCount>0&&localCount===0)return;
+      if(remoteVer>syncVer&&remoteCount>localCount)return;
+    }
     syncVer++;
     await fetch(CLOUD,{method:'PUT',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ver:syncVer,data:ED,ts:Date.now()})});
@@ -182,18 +193,20 @@ async function cloudPull(){
     if(!resp.ok)return;
     const remote=await resp.json();
     if(!remote||!remote.data)return;
-    syncVer=remote.ver||0;
+    const remoteVer=remote.ver||0;
+    if(remoteVer>syncVer)syncVer=remoteVer;
     let n=0;
     for(const[id,v]of Object.entries(remote.data)){
       if(id==='test'||id==='ts')continue;
-      if(!ED[id]){ED[id]=v;n++;}
+      if(!ED[id]){ED[id]=v;n++;continue;}
+      // Merge: remote fills missing local fields
+      if(v.scrapped&&!ED[id].scrapped){ED[id].scrapped=true;ED[id].sf='报废';ED[id].ts='报废';n++;}
       else{
         if(!ED[id].sf&&v.sf){ED[id].sf=v.sf;n++;}
         if(!ED[id].ts&&v.ts){ED[id].ts=v.ts;n++;}
-        if(v.scrapped&&!ED[id].scrapped){ED[id].scrapped=true;n++;}
       }
     }
-    if(n>0){save();render();toast('📥 '+n+'条已同步');}
+    if(n>0){save();render();}
   }catch(e){}
 }
 
