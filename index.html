@@ -489,7 +489,7 @@ function stopLiveScan(){
 function today(){return new Date().toISOString().slice(0,10);}
 function dayOffset(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
 function dateLabel(n){const d=dayOffset(n);const m=d.slice(5,7).replace(/^0/,'');const day=d.slice(8,10).replace(/^0/,'');const labels={'-2':'前天','-1':'昨天','0':'今天','1':'明天','2':'后天'};return labels[''+n]+'<br>'+m+'/'+day;}
-function dateBtn(uid,field,n,hasVal){const cls=hasVal?'qbtn done':'qbtn';return '<button class='+cls+' data-f='+field+' data-n='+n+' onclick=setDate(\"'+field+'\",'+n+',\"'+uid+'\")>'+dateLabel(n)+'</button>';}
+function dateBtn(uid,field,n,hasVal){const cls=hasVal?'qbtn done':'qbtn';return '<button class="'+cls+'" data-f='+field+' data-n='+n+' onclick=setDate(\"'+field+'\",'+n+',\"'+uid+'\")>'+dateLabel(n)+'</button>';}
 function setDate(field,n,uid){
   const d=dayOffset(n);
   if(!ED[uid])ED[uid]={};
