@@ -561,7 +561,11 @@ function saveOne(id){closeM();render();}
 function delOne(id){
   if(!ED[id])ED[id]={};
   ED[id].sf='';ED[id].ts='';
-  save();closeM();render();toast('🗑 已清除');
+  save();cloudPush();
+  const d=D.find(x=>x.id===id);
+  if(d)editModal(d);
+  renderStats();
+  toast('🗑 已清除');
 }
 
 function nav(dir){
