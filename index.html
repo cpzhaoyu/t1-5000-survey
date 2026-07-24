@@ -35,7 +35,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .ftag.wo.on{background:#e65100;border-color:#e65100;}
 
 .list{padding:8px 12px;}
-.card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border-radius:8px;margin-bottom:6px;border:1px solid #f0f0e8;cursor:pointer;transition:background .1s;}
+.card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border-radius:8px;margin-bottom:6px;border:1px solid #f0f0e8;cursor:pointer;content-visibility:auto;contain-intrinsic-size:55px;}
 .card:active{background:#f5f5ee;}
 .card .dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
 .card .mid{flex:1;min-width:0;}
@@ -348,7 +348,6 @@ function renderCards(rows,l){
     </div>`);
   }
   l.innerHTML=frag.join('');
-}
 }
 
 function renderStats(){
