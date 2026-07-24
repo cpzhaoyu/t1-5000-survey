@@ -168,6 +168,8 @@ SCRAPPED.forEach(id=>{if(!ED[id])ED[id]={};ED[id].sf='报废';ED[id].ts='报废'
 const CLOUD='https://jsonblob.com/api/jsonBlob/019f8d71-7234-76e9-b7ea-a9a5e030a21c';
 let syncVer=0, pollTimer=null;
 
+let _saveTimer=null;
+function scheduleSave(){clearTimeout(_saveTimer);_saveTimer=setTimeout(save,200);}
 let _pushTimer=null;
 function schedulePush(){clearTimeout(_pushTimer);_pushTimer=setTimeout(cloudPush,500);}
 
@@ -503,21 +505,31 @@ function dateBtn(uid,field,n,hasVal){const cls=hasVal?'qbtn done':'qbtn';return 
 function setDate(field,n,uid){
   const d=dayOffset(n);
   if(!ED[uid])ED[uid]={};
+  const wasDone=ED[uid].sf&&ED[uid].ts;
   ED[uid][field]=d;
-  save();schedulePush();
+  scheduleSave();schedulePush();
+  // Update button highlights inline (no DOM query)
   document.querySelectorAll('.qbtn[data-f='+field+']').forEach(b=>b.classList.remove('sel'));
   document.querySelector('.qbtn[data-f='+field+'][data-n=\"'+n+'\"]')?.classList.add('sel');
-  // Quick update: just refresh the card's dot color + stats, don't re-render all cards
+  // Quick card dot update
   const card=document.querySelector('.card[data-id=\"'+uid+'\"]');
   if(card){
     const dot=card.querySelector('.dot');
     if(dot){
-      const ok=done({id:uid}), sf=hs({id:uid}), ts=ht({id:uid});
+      const ok=ED[uid].sf&&ED[uid].ts, sf=ED[uid].sf, ts=ED[uid].ts;
       dot.style.background=ok?'#66bb6a':(sf||ts?'#ffd54f':'#ef5350');
     }
   }
-  renderStats();
+  // Incremental stats update (skip full scan)
+  const nowDone=ED[uid].sf&&ED[uid].ts;
+  if(wasDone!==nowDone)renderStats();
+  else updateBar();
   toast('✅ '+{sf:'散粉',ts:'吐丝'}[field]+'='+dateLabel(n).split('<br>')[1]);
+}
+
+function updateBar(){
+  const ok=D.filter(d=>done(d)).length;
+  document.getElementById('bar').style.width=Math.round(ok/D.length*100)+'%';
 }
 
 // Edit modal
