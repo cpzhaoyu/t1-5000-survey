@@ -574,16 +574,19 @@ function delOne(id){
 
 function nav(dir){
   if(SEL===null)return;
-  // Skip scrapped and done plots
-  let i=SEL+dir, tries=0;
-  while(tries<D.length){
-    if(i<0)i=D.length-1;
-    if(i>=D.length)i=0;
-    if(!done(D[i])&&!scrapped(D[i]))break;
-    i+=dir;tries++;
-  }
-  SEL=i;
-  editModal(D[i]);
+  const idx=D.filter(d=>{
+    if(scrapped(d))return false;
+    if(FL==='no')return !done(d);
+    if(FL==='ok')return done(d);
+    return true;
+  }).map(d=>D.indexOf(d));
+  if(!idx.length)return;
+  let p=idx.indexOf(SEL);
+  if(p<0)p=dir<0?idx.findIndex(i=>i>SEL):idx.length-1-([...idx].reverse().findIndex(i=>i<SEL));
+  if(p<0)p=0;
+  const np=(p+dir+idx.length)%idx.length;
+  SEL=idx[np];
+  editModal(D[SEL]);
 }
 function closeM(){
   save();schedulePush();
