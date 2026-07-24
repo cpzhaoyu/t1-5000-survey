@@ -556,9 +556,9 @@ function delOne(id){
   if(!ED[id])ED[id]={};
   ED[id].sf='';ED[id].ts='';
   save();cloudPush();
-  const d=D.find(x=>x.id===id);
-  if(d)editModal(d);
   renderStats();
+  const d=D.find(x=>x.id===id);
+  if(d)requestAnimationFrame(()=>editModal(d));
   toast('🗑 已清除');
 }
 
@@ -575,7 +575,23 @@ function nav(dir){
   SEL=i;
   editModal(D[i]);
 }
-function closeM(){document.getElementById('mdBg').style.display='none';render();}
+function closeM(){
+  document.getElementById('mdBg').style.display='none';
+  // Only refresh stats + the affected card, not full list
+  if(SEL!==null&&D[SEL]){
+    const d=D[SEL];
+    const ok=done(d), sf=hs(d), ts=ht(d), sc=scrapped(d);
+    const clr=sc?'#bdbdbd':(ok?'#66bb6a':(sf||ts?'#ffd54f':'#ef5350'));
+    const card=document.querySelector('.card[data-id=\"'+d.id+'\"]');
+    if(card){
+      const dot=card.querySelector('.dot');
+      if(dot)dot.style.background=clr;
+      const sub=card.querySelector('.sub');
+      if(sub)sub.textContent='排'+d.r+' 列'+d.c+' | 散粉:'+(sc?'-':fmt(gs(d)))+' 吐丝:'+(sc?'-':fmt(gt(d)));
+    }
+  }
+  renderStats();
+}
 
 // Export
 function exportCSV(){
