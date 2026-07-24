@@ -168,6 +168,9 @@ SCRAPPED.forEach(id=>{if(!ED[id])ED[id]={};ED[id].sf='报废';ED[id].ts='报废'
 const CLOUD='https://jsonblob.com/api/jsonBlob/019f8d71-7234-76e9-b7ea-a9a5e030a21c';
 let syncVer=0, pollTimer=null;
 
+let _pushTimer=null;
+function schedulePush(){clearTimeout(_pushTimer);_pushTimer=setTimeout(cloudPush,500);}
+
 function save(){localStorage.setItem('t1_v4',JSON.stringify(ED));}
 
 async function cloudPush(){
@@ -501,7 +504,7 @@ function setDate(field,n,uid){
   const d=dayOffset(n);
   if(!ED[uid])ED[uid]={};
   ED[uid][field]=d;
-  save();cloudPush();
+  save();schedulePush();
   document.querySelectorAll('.qbtn[data-f='+field+']').forEach(b=>b.classList.remove('sel'));
   document.querySelector('.qbtn[data-f='+field+'][data-n=\"'+n+'\"]')?.classList.add('sel');
   // Quick update: just refresh the card's dot color + stats, don't re-render all cards
@@ -568,7 +571,7 @@ function saveOne(id){closeM();render();}
 function delOne(id){
   if(!ED[id])ED[id]={};
   ED[id].sf='';ED[id].ts='';
-  save();cloudPush();
+  save();schedulePush();
   renderStats();
   const d=D.find(x=>x.id===id);
   if(d)requestAnimationFrame(()=>editModal(d));
@@ -589,7 +592,7 @@ function nav(dir){
   editModal(D[i]);
 }
 function closeM(){
-  save();cloudPush();
+  save();schedulePush();
   document.getElementById('mdBg').style.display='none';
   // Only refresh stats + the affected card, not full list
   if(SEL!==null&&D[SEL]){
