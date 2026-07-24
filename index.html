@@ -79,6 +79,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 </style>
 </head>
 <body>
+<div id="loader" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#f5f5f0;z-index:9999;display:flex;align-items:center;justify-content:center;font-size:18px;color:#888;">加载中...</div>
 
 <div style="position:sticky;top:0;z-index:20;">
 <div class="top">
@@ -624,6 +625,7 @@ function copyLink(){
 // Init
 syncIn();
 render();
+setTimeout(()=>{const ld=document.getElementById('loader');if(ld)ld.style.display='none';},100);
 
 // Auto-jump from URL params
 const sp=new URLSearchParams(window.location.search);
