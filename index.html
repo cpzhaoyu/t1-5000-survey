@@ -90,7 +90,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 <div class="ctrls">
   <div class="row">
-    <input type="text" id="q" placeholder="搜..." oninput="render()" onkeydown="if(event.key==='Enter')searchJump()" style="flex:1;min-width:0;">
+    <input type="text" id="q" placeholder="搜..." oninput="debounceRender()" onkeydown="if(event.key==='Enter')searchJump()" style="flex:1;min-width:0;">
     <input type="file" id="camIn" accept="image/*" capture="environment" style="display:none" onchange="scanCam()">
     <button class="btn s" onclick="startLiveScan()" title="扫码" style="font-size:20px;padding:4px 10px;">📷</button>
     <span class="ftag" data-f="all" onclick="setF('all',this)">全部</span>
@@ -313,6 +313,8 @@ let FL='no', SEL=null, skipAuto=false;
 function render(){
   requestAnimationFrame(()=>_render());
 }
+let _debounceTimer=null;
+function debounceRender(){clearTimeout(_debounceTimer);_debounceTimer=setTimeout(render,150);}
 function _render(){
   const q=document.getElementById('q').value.trim().toLowerCase();
   let rows=D.slice();
@@ -331,20 +333,21 @@ function _render(){
 }
 
 function renderCards(rows,l){
-  let h='';
+  const frag=[];
   for(const d of rows){
     const ok=done(d), sf=hs(d), ts=ht(d), sc=scrapped(d);
     const clr=sc?'#bdbdbd':(ok?'#66bb6a':(sf||ts?'#ffd54f':'#ef5350'));
-    h+=`<div class="card" data-id="${d.id}" onclick="sel(${d.r},${d.c})">
+    frag.push(`<div class="card" data-id="${d.id}" onclick="sel(${d.r},${d.c})">
       <div class="dot" style="background:${clr}"></div>
       <div class="mid">
         <div class="nm">${d.id}${sc?' <span style=\"color:#757575\">[报废]</span>':''}</div>
         <div class="sub">排${d.r} 列${d.c} | 散粉:${sc?'-':fmt(gs(d))} 吐丝:${sc?'-':fmt(gt(d))}</div>
       </div>
       <span class="arrow">›</span>
-    </div>`;
+    </div>`);
   }
-  l.innerHTML=h;
+  l.innerHTML=frag.join('');
+}
 }
 
 function renderStats(){
