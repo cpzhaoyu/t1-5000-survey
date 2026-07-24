@@ -372,6 +372,7 @@ function renderStats(){
     else if(hs(d)||ht(d))par++;
     else no++;
   });
+  _doneCount=ok;
   const pct=D.length?Math.round(ok/D.length*100):0;
   document.getElementById('stats').innerHTML=`
     <div class="stat"><div class="v">${D.length}</div><div class="l">总小区</div></div>
@@ -522,15 +523,18 @@ function setDate(field,n,uid){
   }
   // Incremental stats update (skip full scan)
   const nowDone=ED[uid].sf&&ED[uid].ts;
-  if(wasDone!==nowDone)renderStats();
-  else updateBar();
+  if(wasDone!==nowDone){
+    _doneCount+=nowDone?1:-1;
+    updateBar();
+    renderStats();
+  }else{
+    updateBar();
+  }
   toast('✅ '+{sf:'散粉',ts:'吐丝'}[field]+'='+dateLabel(n).split('<br>')[1]);
 }
 
-function updateBar(){
-  const ok=D.filter(d=>done(d)).length;
-  document.getElementById('bar').style.width=Math.round(ok/D.length*100)+'%';
-}
+let _doneCount=0;
+function updateBar(){document.getElementById('bar').style.width=Math.round(_doneCount/D.length*100)+'%';}
 
 // Edit modal
 function editModal(d){
