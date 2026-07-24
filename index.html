@@ -35,7 +35,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .ftag.wo.on{background:#e65100;border-color:#e65100;}
 
 .list{padding:8px 12px;}
-.card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border-radius:8px;margin-bottom:6px;border:1px solid #f0f0e8;cursor:pointer;content-visibility:auto;contain-intrinsic-size:55px;}
+.card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border-radius:8px;margin-bottom:6px;border:1px solid #f0f0e8;cursor:pointer;}
 .card:active{background:#f5f5ee;}
 .card .dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
 .card .mid{flex:1;min-width:0;}
@@ -344,18 +344,31 @@ function _render(){
   renderStats();
 }
 
-function renderCards(rows,l,begin){
+let _lazyRows=[], _lazyIdx=0, _lazyList=null, _lazyObs=null;
+
+function renderCards(rows,l){
+  _lazyRows=rows; _lazyIdx=0; _lazyList=l;
   l.innerHTML='';
-  const BATCH=50;
-  let i=begin||0;
-  function chunk(){
-    const end=Math.min(i+BATCH,rows.length);
-    let h='';
-    for(let j=i;j<end;j++){
-      const d=rows[j];
-      const ok=done(d), sf=hs(d), ts=ht(d), sc=scrapped(d);
-      const clr=sc?'#bdbdbd':(ok?'#66bb6a':(sf||ts?'#ffd54f':'#ef5350'));
-      h+=`<div class="card" data-id="${d.id}" onclick="sel(${d.r},${d.c})">
+  loadBatch(150);
+  // Set up sentinel observer
+  if(_lazyObs)_lazyObs.disconnect();
+  _lazyObs=new IntersectionObserver((e)=>{if(e[0].isIntersecting)loadBatch(150);});
+}
+
+function loadBatch(n){
+  if(_lazyIdx>=_lazyRows.length){
+    // Remove sentinel
+    const s=document.getElementById('lazySentinel');
+    if(s)s.remove();
+    return;
+  }
+  const end=Math.min(_lazyIdx+n,_lazyRows.length);
+  let h='';
+  for(let j=_lazyIdx;j<end;j++){
+    const d=_lazyRows[j];
+    const ok=done(d), sf=hs(d), ts=ht(d), sc=scrapped(d);
+    const clr=sc?'#bdbdbd':(ok?'#66bb6a':(sf||ts?'#ffd54f':'#ef5350'));
+    h+=`<div class="card" data-id="${d.id}" onclick="sel(${d.r},${d.c})">
       <div class="dot" style="background:${clr}"></div>
       <div class="mid">
         <div class="nm">${d.id}${sc?' <span style=\"color:#757575\">[报废]</span>':''}</div>
@@ -363,12 +376,16 @@ function renderCards(rows,l,begin){
       </div>
       <span class="arrow">›</span>
     </div>`;
-    }
-    l.insertAdjacentHTML('beforeend',h);
-    i=end;
-    if(i<rows.length)requestAnimationFrame(chunk);
   }
-  requestAnimationFrame(chunk);
+  _lazyIdx=end;
+  // Remove old sentinel, insert batch, add new sentinel
+  const oldS=document.getElementById('lazySentinel');
+  if(oldS)oldS.remove();
+  _lazyList.insertAdjacentHTML('beforeend',h);
+  if(_lazyIdx<_lazyRows.length){
+    _lazyList.insertAdjacentHTML('beforeend','<div id="lazySentinel" style="height:1px"></div>');
+    _lazyObs.observe(document.getElementById('lazySentinel'));
+  }
 }
 
 function renderStats(){
