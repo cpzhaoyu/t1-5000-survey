@@ -196,7 +196,12 @@ async function cloudPush(){
 
 async function cloudPull(){
   try{
-    const resp=await fetch(CLOUD+'?_='+Date.now());
+    // Quick version check first to avoid downloading full blob if unchanged
+    const head=await fetch(CLOUD,{method:'HEAD',cache:'no-store'});
+    const etag=head.headers.get('etag')||'';
+    if(etag&&etag===_lastCloudEtag)return;
+    _lastCloudEtag=etag;
+    const resp=await fetch(CLOUD);
     if(!resp.ok)return;
     const remote=await resp.json();
     if(!remote||!remote.data)return;
@@ -213,11 +218,12 @@ async function cloudPull(){
         if(!ED[id].ts&&v.ts){ED[id].ts=v.ts;n++;}
       }
     }
-    if(n>0){save();render();}
+    if(n>0){save();renderStats();_doneCount=D.filter(d=>done(d)).length;updateBar();}
   }catch(e){}
 }
 
-pollTimer=setInterval(cloudPull,8000);
+let _lastCloudEtag='';
+pollTimer=setInterval(cloudPull,30000);
 cloudPull();
 
 function copyLink(){
