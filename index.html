@@ -169,9 +169,12 @@ const CLOUD='https://jsonblob.com/api/jsonBlob/019f8d71-7234-76e9-b7ea-a9a5e030a
 let syncVer=0, pollTimer=null;
 
 let _saveTimer=null;
-function scheduleSave(){clearTimeout(_saveTimer);_saveTimer=setTimeout(save,200);}
+function scheduleSave(){clearTimeout(_saveTimer);_saveTimer=setTimeout(flushSave,200);}
+function flushSave(){clearTimeout(_saveTimer);save();}
 let _pushTimer=null;
 function schedulePush(){clearTimeout(_pushTimer);_pushTimer=setTimeout(cloudPush,500);}
+window.addEventListener('beforeunload',()=>{flushSave();});
+window.addEventListener('pagehide',()=>{flushSave();});
 
 function save(){localStorage.setItem('t1_v4',JSON.stringify(ED));}
 
