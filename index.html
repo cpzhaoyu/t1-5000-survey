@@ -576,6 +576,7 @@ function nav(dir){
   editModal(D[i]);
 }
 function closeM(){
+  save();cloudPush();
   document.getElementById('mdBg').style.display='none';
   // Only refresh stats + the affected card, not full list
   if(SEL!==null&&D[SEL]){
